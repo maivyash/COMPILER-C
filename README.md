@@ -1,100 +1,120 @@
-# 🖥️ cc-llvm-mini  
-*A minimal C-subset compiler written in Python that emits LLVM IR and links with clang.*
+🖥️ cc-llvm-mini
 
----
+A minimal C-subset compiler written in Python that emits LLVM IR and links with clang.
 
-## ✨ Features
-- 🔹 Supports `int` and `void` types  
-- 🔹 Functions with parameters & local variables  
-- 🔹 Expressions: `+ - * / % < <= > >= == != && || !` and assignments  
-- 🔹 Statements: `if/else`, `while`, `return`, and expression statements  
+✨ Features
+
+🔹 Supports int and void types
+
+🔹 Functions with parameters & local variables
+
+🔹 Expressions: + - * / % < <= > >= == != && || ! and assignments
+
+🔹 Statements: if/else, while, return, and expression statements
 
 ⚡ Lightweight and educational — great for learning how compilers work!
 
----
+📦 Prerequisites
 
-## 📦 1) Prerequisites
-- Python **3.9+**  
-- **LLVM/clang** (for turning `.ll` into a native executable)  
+Python 3.9+
+
+LLVM / clang (to turn .ll into a native executable)
 
 Install clang on Windows (choose one):
 
-```powershell
-# One-time (admin PowerShell recommended)
+# Option A: winget (one-time, admin recommended)
 winget install LLVM.LLVM --silent
-# or (if Chocolatey is installed)
-choco install llvm -y
-Restart PowerShell so clang appears on PATH. Verify:
 
-powershell
-Copy code
+# Option B: Chocolatey (if you have choco)
+choco install llvm -y
+
+
+Restart PowerShell after install so clang appears on PATH. Verify:
+
 where clang
-📥 2) Install this project (editable)
-powershell
-Copy code
+
+📥 Install this project (editable)
 cd C:\Users\gupta\Desktop\Projects\COMPILER
 python -m pip install -e .
-If you see a warning that ccmini.exe is not on PATH, don’t worry — you can still use the module entry point shown below.
-(See Troubleshooting for PATH setup.)
 
-⚙️ 3) Compile the example to LLVM IR
-Using the module entry point (works always):
 
-powershell
-Copy code
+If you see a warning that ccmini.exe is not on PATH, that’s okay — use the python -m cc.cli module entry point shown below (it works even if a script wrapper isn’t on PATH).
+
+⚙️ Compile an example to LLVM IR
+
+Using the module entry point (always works):
+
 python -m cc.cli examples/hello.c -o examples/hello.ll
-Or if ccmini is on PATH:
 
-powershell
-Copy code
+
+Or, if ccmini is on PATH:
+
 ccmini examples/hello.c -o examples/hello.ll
-✅ Expected: Wrote examples\hello.ll
 
-🚀 4) Build a native executable with clang
-powershell
-Copy code
+
+You should see:
+
+Wrote examples\hello.ll
+
+🚀 Build a native executable with clang (Windows)
 clang examples\hello.ll -o examples\hello.exe
 .\examples\hello.exe
-This example just returns an integer.
-To see a printed value, modify the program to call your own print function, or inspect %ERRORLEVEL% after running.
 
-📖 5) Command reference
+
+Check native process exit code:
+
+In PowerShell:
+
+$LASTEXITCODE
+
+
+In cmd.exe:
+
+echo %ERRORLEVEL%
+
+
+Note: the example program returns an integer; modify your source to call a print function if you want visible stdout output.
+
+📖 Command reference
+
 Compile a C file to LLVM IR:
 
-powershell
-Copy code
 python -m cc.cli <input.c> -o <output.ll>
-🛠️ 6) Troubleshooting
-❌ ccmini is not recognized
-Use the module entry point or add Python Scripts folder to PATH:
 
-powershell
-Copy code
-# Add for current session (adjust Python version if different)
+🛠 Troubleshooting
+❌ ccmini is not recognized
+
+Use the module entry point (python -m cc.cli ...) or add your Python Scripts folder to PATH.
+
+Add Scripts folder to the current PowerShell session (adjust path for your Python install):
+
 $env:Path += ";C:\Users\gupta\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\Scripts"
 
-# Persist (reopen PowerShell afterwards)
+
+To persist the change (reopen PowerShell afterwards):
+
 setx PATH "$($env:Path);C:\Users\gupta\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\Scripts"
+
 ❌ clang is not recognized
-Install LLVM or add to PATH:
 
-powershell
-Copy code
+Install LLVM or add it to PATH:
+
 setx PATH "$($env:Path);C:\Program Files\LLVM\bin"
+
+
+(Then reopen PowerShell.)
+
 ❌ Parser errors
-Check for:
 
-Missing ;
+Common causes:
 
-Unmatched { }
+Missing ; at the end of statements
 
-Unsupported syntax
+Unmatched braces { }
 
-⚠️ This compiler targets a small C subset (no pointers/arrays/structs).
+Unsupported syntax (this project implements only a small subset of C — no pointers/arrays/structs yet)
 
-📂 7) Project layout
-bash
-Copy code
+📂 Project layout
 src/cc/
   __init__.py
   tokens.py      # token kinds and Token dataclass
@@ -104,26 +124,59 @@ src/cc/
   symbols.py     # simple symbol tables
   codegen.py     # emits LLVM IR (.ll)
   cli.py         # CLI entry point
+
 examples/
   hello.c        # sample program
-🌱 8) Extend the language
-Want to grow this project? Try adding:
 
-Unary ++ / --
+🌱 Example examples/hello.c
+int add(int a, int b) {
+    int c;
+    c = a + b;
+    return c;
+}
 
-for loops
+int main() {
+    int x;
+    x = add(3, 4);
+    return x; // program exit code will be 7
+}
 
-Function prototypes & multiple files
 
-A simple type checker
+Compile & run:
 
-Pointers & arrays
+python -m cc.cli examples/hello.c -o examples/hello.ll
+clang examples/hello.ll -o examples\hello.exe
+.\examples\hello.exe
+$LASTEXITCODE
 
-This compiler is designed for experimentation — perfect for students and hobbyists.
+🌱 Extend the language (ideas)
 
-📜 9) License
+This compiler is designed for experimentation. Suggestions for next steps:
+
+Add unary ++ / --
+
+Add for loops and break / continue
+
+Support function prototypes & multiple files
+
+Implement a simple static type checker
+
+Add pointers, arrays, and structs
+
+Emit .data and support string literals + a minimal runtime / stdlib
+
+Add basic optimizations (constant folding, simple dead code elimination)
+
+📜 License
+
 MIT © 2025
 
-🤝 Contributing
-Pull requests are welcome! For major changes, open an issue first to discuss.
+(Include a LICENSE file with the MIT text.)
 
+🤝 Contributing
+
+Contributions are welcome! If you plan larger changes, open an issue to discuss design first. Pull requests for bug fixes, minor features, and docs improvements are appreciated.
+
+⭐ Support
+
+If you find this project useful, please star the repo on GitHub — it helps other people discover it!
