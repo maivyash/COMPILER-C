@@ -1,0 +1,45 @@
+Metadata-Version: 2.4
+Name: cc-llvm-mini
+Version: 0.1.0
+Summary: A minimal C-subset compiler emitting LLVM IR (.ll)
+Author: Your Name
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+
+## cc-llvm-mini
+
+A minimal C-subset compiler written in Python that emits LLVM IR (.ll).
+
+### Supported subset
+- int and void types
+- functions, parameters, local variables
+- expressions: + - * / % comparisons, == !=, && ||, !, assignments
+- statements: if/else, while, return, expression statements
+
+### Install
+
+```bash
+pip install -e .
+```
+
+### Compile example to LLVM IR
+
+```bash
+ccmini examples/hello.c -o examples/hello.ll
+```
+
+### Build native executable with LLVM (Windows PowerShell)
+
+Assumes LLVM `clang` is on PATH.
+
+```powershell
+clang examples/hello.ll -o examples/hello.exe
+./examples/hello.exe
+```
+
+### Notes
+- Educational subset, not full C. No pointers/arrays/structs.
+- You can extend it by adding tokens, AST nodes, parser rules, and codegen.
+
+
+

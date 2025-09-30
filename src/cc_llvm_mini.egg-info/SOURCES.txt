@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+src/cc/__init__.py
+src/cc/ast_nodes.py
+src/cc/cli.py
+src/cc/codegen.py
+src/cc/lexer.py
+src/cc/parser.py
+src/cc/symbols.py
+src/cc/tokens.py
+src/cc_llvm_mini.egg-info/PKG-INFO
+src/cc_llvm_mini.egg-info/SOURCES.txt
+src/cc_llvm_mini.egg-info/dependency_links.txt
+src/cc_llvm_mini.egg-info/entry_points.txt
+src/cc_llvm_mini.egg-info/top_level.txt
